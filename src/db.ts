@@ -9,6 +9,7 @@ import { Guild } from "./entities/Guild";
 import { Token } from "./entities/Token";
 import { User } from "./entities/User";
 import { Variable } from "./entities/Variable";
+import { Cache } from "./entities/Cache";
 
 // Connecting to database
 dotenv.config();
