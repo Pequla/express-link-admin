@@ -2,7 +2,7 @@ import { AppDataSource } from "../db";
 import dotenv from "dotenv";
 import bcrypt from "bcrypt"
 import { LoginModel } from "../models/login.model";
-import { TokenService } from "./token.service";
+import { AdminTokenService } from "./admin.token.service";
 import jwt from "jsonwebtoken"
 import { Admin } from "../entities/Admin";
 
@@ -20,7 +20,7 @@ export class AdminService {
         const user = await this.findByUsername(model.username)
         if (await bcrypt.compare(model.password, user.password)) {
             const refresh = jwt.sign({ name: model.username }, refreshSecret, { expiresIn: refreshExpire });
-            const data = await TokenService.save(user.adminId, refresh)
+            const data = await AdminTokenService.save(user.adminId, refresh)
             return {
                 access: jwt.sign({ name: model.username }, accessSecret, { expiresIn: accessExpire }),
                 refresh: data.value
@@ -31,7 +31,7 @@ export class AdminService {
 
     public static async refreshToken(refresh: string) {
         try {
-            const data = await TokenService.findByToken(refresh)
+            const data = await AdminTokenService.findByToken(refresh)
             if (data == undefined)
                 throw new Error('REFRESH_FAILED');
 

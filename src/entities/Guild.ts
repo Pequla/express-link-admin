@@ -5,6 +5,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
+import { Ban } from "./Ban";
 import { Data } from "./Data";
 
 @Index("uq_guild_discord_id", ["discordId"], { unique: true })
@@ -21,6 +22,9 @@ export class Guild {
     default: () => "CURRENT_TIMESTAMP",
   })
   createdAt: Date;
+
+  @OneToMany(() => Ban, (ban) => ban.guild)
+  bans: Ban[];
 
   @OneToMany(() => Data, (data) => data.guild)
   data: Data[];

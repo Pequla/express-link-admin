@@ -3,9 +3,11 @@ import {
   Entity,
   Index,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Admin } from "./Admin";
+import { Ban } from "./Ban";
 import { Data } from "./Data";
 
 @Index("uq_user_discord_id", ["discordId"], { unique: true })
@@ -26,7 +28,12 @@ export class User {
   @OneToMany(() => Admin, (admin) => admin.user)
   admins: Admin[];
 
+  @OneToMany(() => Ban, (ban) => ban.admin)
+  bans: Ban[];
+
+  @OneToOne(() => Ban, (ban) => ban.user)
+  ban: Ban;
+
   @OneToMany(() => Data, (data) => data.user)
   data: Data[];
-
 }

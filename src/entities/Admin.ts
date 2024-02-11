@@ -9,6 +9,7 @@ import {
 } from "typeorm";
 import { User } from "./User";
 import { AdminToken } from "./AdminToken";
+import { Token } from "./Token";
 
 @Index("fk_user_admin_idx", ["userId"], {})
 @Index("uq_admin_username", ["username"], { unique: true })
@@ -44,4 +45,7 @@ export class Admin {
 
   @OneToMany(() => AdminToken, (adminToken) => adminToken.admin)
   adminTokens: AdminToken[];
+
+  @OneToMany(() => Token, (token) => token.admin)
+  tokens: Token[];
 }

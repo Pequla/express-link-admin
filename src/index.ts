@@ -6,6 +6,7 @@ import { AppDataSource } from './db'
 import { notFoundResponse } from './utils'
 import { AdminRoute } from './routes/admin.route'
 import { DataRoute } from './routes/data.route'
+import { TokenRoute } from './routes/token.route'
 
 // Setting up web server
 const app = express()
@@ -27,6 +28,7 @@ AppDataSource.initialize()
 
 app.use('/api/admin', AdminRoute)
 app.use('/api/data', DataRoute)
+app.use('/api/token', TokenRoute)
 
 // Default not found page
 app.get('*', function (req, res) {
