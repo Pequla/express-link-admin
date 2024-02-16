@@ -27,8 +27,33 @@ export class BanService {
         return data
     }
 
+    public static async getAllBanUserIds() {
+        return await repo.find({
+            select: {
+                userId: true
+            },
+            where: {
+                deletedAt: IsNull()
+            }
+        })
+    }
+
     public static async saveBan(model: BanModel, username: string) {
         const admin = await AdminService.findByUsername(username)
+
+        const existing = await repo.findOne({
+            select: {
+                banId: true
+            },
+            where: {
+                userId: model.id,
+                deletedAt: IsNull()
+            }
+        })
+
+        if (existing != undefined)
+            throw new Error('ALREADY_EXISTS')
+
         const data = await repo.save({
             adminId: admin.adminId,
             userId: model.id,
