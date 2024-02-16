@@ -1,7 +1,6 @@
 import { IsNull, Like } from "typeorm";
 import { AppDataSource } from "../db";
 import { Data } from "../entities/Data";
-import { BanService } from "./ban.service";
 
 const repo = AppDataSource.getRepository(Data)
 
@@ -20,7 +19,7 @@ export class DataService {
             }
         })
 
-        await this.filterOut(data)
+        data.forEach(item => delete item.deletedAt)
         return data
     }
 
@@ -73,7 +72,7 @@ export class DataService {
             }
         })
 
-        await this.filterOut(data)
+        data.forEach(item => delete item.deletedAt)
         return data
     }
 
@@ -90,12 +89,5 @@ export class DataService {
 
         data.deletedAt = new Date()
         return await repo.save(data)
-    }
-
-    private static async filterOut(data: Data[]) {
-        const bans = await BanService.getAllBanUserIds()
-        const ids = bans.map(ban => ban.userId)
-        data.filter(item => ids.indexOf(item.userId) < 0)
-        data.forEach(item => delete item.deletedAt)
     }
 }

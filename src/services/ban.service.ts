@@ -27,17 +27,6 @@ export class BanService {
         return data
     }
 
-    public static async getAllBanUserIds() {
-        return await repo.find({
-            select: {
-                userId: true
-            },
-            where: {
-                deletedAt: IsNull()
-            }
-        })
-    }
-
     public static async saveBan(model: BanModel, username: string) {
         const admin = await AdminService.findByUsername(username)
 
