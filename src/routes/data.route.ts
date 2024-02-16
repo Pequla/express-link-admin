@@ -20,6 +20,15 @@ DataRoute.get('/search/:payload', authenticateToken, async (req, res) => {
     }
 })
 
+DataRoute.get('/user/:id', authenticateToken, async (req, res) => {
+    try {
+        const id = retrieveIdFromPath(req)
+        res.json(await DataService.getDataByUserId(id));
+    } catch (e) {
+        sendErrorResponse(res, 400, e.message);
+    }
+})
+
 DataRoute.get('/:id', authenticateToken, async (req, res) => {
     try {
         const id = retrieveIdFromPath(req)

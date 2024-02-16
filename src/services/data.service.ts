@@ -42,6 +42,27 @@ export class DataService {
         return data
     }
 
+    public static async getDataByUserId(id: number) {
+        const data = await repo.findOne({
+            select: {
+                dataId: true
+            },
+            where: {
+                userId: id,
+                deletedAt: IsNull()
+            },
+            relations: {
+                user: true,
+                guild: true
+            }
+        })
+
+        if (data == undefined)
+            throw new Error('NOT_FOUND')
+
+        return data
+    }
+
     public static async searchData(query: string) {
         const like = Like(`%${query.toLowerCase()}%`)
         const data = await repo.find({

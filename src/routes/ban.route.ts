@@ -12,6 +12,15 @@ BanRoute.get('/', authenticateToken, async (req: any, res) => {
     }
 })
 
+BanRoute.get('/user/:id', authenticateToken, async (req: any, res) => {
+    try {
+        const id = retrieveIdFromPath(req)
+        res.json(await BanService.getBanByUserId(id));
+    } catch (e) {
+        sendErrorResponse(res, 400, e.message);
+    }
+})
+
 BanRoute.post('/', authenticateToken, async (req: any, res) => {
     try {
         const username = req.user.name

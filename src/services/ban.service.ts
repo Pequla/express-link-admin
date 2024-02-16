@@ -8,7 +8,21 @@ const repo = AppDataSource.getRepository(Ban)
 
 export class BanService {
     public static async getAllBans() {
-        const data = await repo.find({
+        return await repo.find({
+            select: {
+                banId: true,
+                userId: true,
+                user: {
+                    userId: true,
+                    discordId: true,
+                    createdAt: true
+                },
+                admin: {
+                    username: true
+                },
+                reason: true,
+                createdAt: true
+            },
             where: {
                 deletedAt: IsNull()
             },
@@ -16,14 +30,43 @@ export class BanService {
                 banId: 'DESC'
             },
             relations: {
-                user: true
+                user: true,
+                admin: true
+            }
+        })
+    }
+
+    public static async getBanByUserId(id: number) {
+        const data = await repo.findOne({
+            select: {
+                banId: true,
+                userId: true,
+                user: {
+                    userId: true,
+                    discordId: true,
+                    createdAt: true
+                },
+                admin: {
+                    username: true
+                },
+                reason: true,
+                createdAt: true
+            },
+            where: {
+                deletedAt: IsNull(),
+                user: {
+                    userId: id
+                }
+            },
+            relations: {
+                user: true,
+                admin: true
             }
         })
 
-        data.forEach(item => {
-            delete item.adminId
-            delete item.deletedAt
-        })
+        if (data == undefined)
+            throw new Error("NOT_FOUND")
+
         return data
     }
 
@@ -42,6 +85,9 @@ export class BanService {
 
         if (existing != undefined)
             throw new Error('ALREADY_EXISTS')
+
+        if (model.reason == '')
+            model.reason = null
 
         const data = await repo.save({
             adminId: admin.adminId,
