@@ -2,7 +2,6 @@ import dotenv from "dotenv"
 import { DataSource } from "typeorm"
 import { Admin } from "./entities/Admin";
 import { Access } from "./entities/Access";
-import { AdminToken } from "./entities/AdminToken";
 import { Ban } from "./entities/Ban";
 import { Data } from "./entities/Data";
 import { Guild } from "./entities/Guild";
@@ -20,6 +19,6 @@ export const AppDataSource = new DataSource({
     username: process.env.DATABASE_USERNAME,
     password: process.env.DATABASE_PASSWORD,
     database: process.env.DATABASE_NAME,
-    entities: [Access, Admin, AdminToken, Ban, Cache, Data, Guild, Token, User, Variable],
+    entities: [Access, Admin, Ban, Cache, Data, Guild, Token, User, Variable],
     logging: false,
 })

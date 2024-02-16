@@ -3,7 +3,6 @@ import {
   Entity,
   Index,
   OneToMany,
-  OneToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Admin } from "./Admin";
@@ -28,11 +27,8 @@ export class User {
   @OneToMany(() => Admin, (admin) => admin.user)
   admins: Admin[];
 
-  @OneToMany(() => Ban, (ban) => ban.admin)
+  @OneToMany(() => Ban, (ban) => ban.user)
   bans: Ban[];
-
-  @OneToOne(() => Ban, (ban) => ban.user)
-  ban: Ban;
 
   @OneToMany(() => Data, (data) => data.user)
   data: Data[];

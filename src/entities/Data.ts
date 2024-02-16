@@ -9,8 +9,8 @@ import {
 import { Guild } from "./Guild";
 import { User } from "./User";
 
-@Index("fk_guild_data_idx", ["guildId"], {})
-@Index("fk_user_data_idx", ["userId"], {})
+@Index("fk_data_guild_idx", ["guildId"], {})
+@Index("fk_data_user_idx", ["userId"], {})
 @Entity("data", { schema: "data_link" })
 export class Data {
   @PrimaryGeneratedColumn({ type: "int", name: "data_id", unsigned: true })
