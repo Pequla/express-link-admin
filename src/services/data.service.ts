@@ -35,6 +35,9 @@ export class DataService {
             }
         })
 
+        if (data == undefined)
+            throw new Error('NOT_FOUND')
+
         delete data.deletedAt
         return data
     }
@@ -80,6 +83,9 @@ export class DataService {
                 deletedAt: IsNull()
             }
         })
+
+        if (data == undefined)
+            throw new Error('NOT_FOUND')
 
         data.deletedAt = new Date()
         return await repo.save(data)

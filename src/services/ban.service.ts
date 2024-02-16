@@ -1,20 +1,22 @@
 import { IsNull } from "typeorm";
 import { AppDataSource } from "../db";
-import { Token } from "../entities/Token";
+import { Ban } from "../entities/Ban";
 import { AdminService } from "./admin.service";
-import { v4 as uuidv4 } from 'uuid';
+import { BanModel } from "../models/ban.model";
 
-const repo = AppDataSource.getRepository(Token)
+const repo = AppDataSource.getRepository(Ban)
 
-export class TokenService {
-    public static async getAllTokensByAdminUsername(username: string) {
+export class BanService {
+    public static async getAllBans() {
         const data = await repo.find({
             where: {
-                admin: {
-                    username: username,
-                    active: true
-                },
                 deletedAt: IsNull()
+            },
+            order: {
+                banId: 'DESC'
+            },
+            relations: {
+                user: true
             }
         })
 
@@ -25,40 +27,35 @@ export class TokenService {
         return data
     }
 
-    public static async createToken(username: string) {
+    public static async saveBan(model: BanModel, username: string) {
         const admin = await AdminService.findByUsername(username)
-
         const data = await repo.save({
             adminId: admin.adminId,
-            value: uuidv4(),
+            userId: model.id,
+            reason: model.reason,
             createdAt: new Date()
         })
 
         delete data.adminId
         delete data.deletedAt
-
         return data
     }
 
-    public static async deleteToken(username: string, id: number) {
+    public static async deleteBan(id: number) {
         const data = await repo.findOne({
             where: {
-                tokenId: id,
-                admin:{
-                    username: username,
-                    active: true
-                },
+                banId: id,
                 deletedAt: IsNull()
             }
         })
 
-        if (data == undefined) {
+        if (data == undefined)
             throw new Error('NOT_FOUND')
-        }
 
         data.deletedAt = new Date()
         const saved = await repo.save(data)
         delete saved.adminId
+        delete saved.deletedAt
 
         return saved
     }
